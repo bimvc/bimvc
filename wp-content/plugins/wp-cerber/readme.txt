@@ -1,44 +1,47 @@
-=== Cerber Limit Login Attempts ===
+=== Cerber Security & Limit Login Attempts ===
 Contributors: gioni
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SR8RJXFU35EW8
-Tags: security, access control, authentication, limit, login, access, admin, users, protect, protection, brute force, bruteforce, activity, log, logging, block, hide wp-admin, wp-login, wp-admin, fail2ban, monitoring, rename wp login, whitelist, blacklist, wordpress security, xmlrpc, user enumeration, hardening
-Requires at least: 3.3
-Tested up to: 4.4.2
-Stable tag: 2.7.2
+Tags: security, admin, login, protect, protection, woocommerce, antispam, brute force, bruteforce, users, captcha, recaptcha, activity, log, logging, block, fail2ban, monitoring, rename wp login, whitelist, blacklist, wordpress security, xmlrpc, user enumeration, hardening, authentication, block
+Requires at least: 4.4
+Tested up to: 4.7.1
+Stable tag: 4.0
 License: GPLv2
 
-Protects site against brute force attacks. Restrict login by IP access lists. Limit login attempts. Comprehensive control of user activity.
+Protection against brute force attacks and bots. Restrict login by IP access lists. Monitor user and bot activity. Limit login attempts. reCAPTCHA.
 
 == Description ==
 
 Limit the number of login attempts through the login form, XML-RPC requests or using auth cookies.
 Restrict access with Black IP Access List and White IP Access List.
-Track user and intruder activity.
+reCAPTCHA to protect registration form from spam registrations.
+Track user, bot and hacker activity.
 Hardening WordPress.
 
 **Features you will love**
 
-* **Limit login attempts** when logging in by IP address or subnet Class C.
+* **Limit login attempts** when logging in by IP address or entire subnet.
 * Monitors logins made by login forms, XML-RPC requests or auth cookies.
-* Permit or restrict logins by **White Access list** and **Black Access List** with IP or subnet.
+* Permit or restrict logins by **White IP Access list** and **Black IP Access List** with single IP, range or subnet.
 * Log all activities related to the logging in/out process.
-* Hide wp-login.php from possible attacks and return 404 HTTP Error.
+* Hide wp-login.php, wp-signup.php and wp-register.php from possible attacks and return 404 HTTP Error.
 * Hide wp-admin (dashboard) and return 404 HTTP Error when a user isn't logged in.
-* Make **custom URL for logging in** ([rename wp-login.php](http://wpcerber.com/how-to-rename-wp-login-php/)).
-* Immediately block IP or subnet when attempting to log in with **non-existent username**.
-* Disable automatic redirecting to login page.
+* Create **Custom login URL** ([rename wp-login.php](http://wpcerber.com/how-to-rename-wp-login-php/)).
+* Immediately block IP or subnet when attempting to log in with non-existent or prohibited username.
+* Disable WP REST API
 * Disable XML-RPC (block access to the XML-RPC server including Pingbacks and Trackbacks)
 * Disable feeds (block access to the RSS, Atom and RDF feeds)
-* Disable WP REST API
 * Restrict access to the XML-RPC, REST API and feeds by **White Access list** with IP or subnet.
+* Disable automatic redirecting to login page.
 * **Stop user enumeration** (block access to the pages like /?author=n)
 * Proactively **block IP subnet class C** for intruder's IP.
+* Antispam: **reCAPTCHA** to protect WordPress login/register/lost password forms.
+* reCAPTCHA for WooCommerce login/register/lost password forms.
 * Citadel mode for **massive brute force attack**.
 * [Play nice with **fail2ban**](http://wpcerber.com/how-to-protect-wordpress-with-fail2ban/): write failed attempts to the syslog or custom log file.
-* View and filter out activities list by IP, username or particular event.
+* Inspect and filter out activities list by IP, username or particular event.
 * Handles site/server behind reverse proxy.
 * Optional admin notifications by email.
-* WP Cerber doesn't rely on any external service (unlike other similar plugins) and doesn't send any data outside to work.
+* Trigger and action for the [jetFlow.io automation plugin](http://jetflow.io).
 
 **How does WP Cerber protect sites?**
 
@@ -58,14 +61,17 @@ Massive botnet brute force attack? That's no longer a problem. **Citadel mode** 
 
 **Translations**
 
-* English
-* Spanish, thanks to Ismael
-* Deutsche, thanks to mario and Mike
+* Czech, thanks to [Hrohh](https://profiles.wordpress.org/hrohh/)
+* Deutsche, thanks to mario, Mike and [Daniel](http://detacu.de)
 * Dutch, thanks to [Bernardo](https://twitter.com/bernardohulsman)
 * Français, thanks to [hardesfred](https://profiles.wordpress.org/hardesfred/)
-* Czech, thanks to [Hrohh](https://profiles.wordpress.org/hrohh/)
-* Український
-* Русский
+* Norwegian (Bokmål), thanks to [Eirik Vorland](https://www.facebook.com/KjellDaSensei)
+* Portuguese, thanks to Felipe Turcheti
+* Spanish, thanks to Ismael and leemon
+* Український, thanks to [Nadia](https://profiles.wordpress.org/webbistro)
+* Русский, thanks to [Yui](https://profiles.wordpress.org/fierevere/)
+
+Thanks to [POEditor.com](https://poeditor.com) for helping to translate this project.
 
 I am passionate about building neat and reliable solutions so, please, [write your review or even give a five-star rating here](https://wordpress.org/support/view/plugin-reviews/wp-cerber).
 
@@ -73,7 +79,7 @@ Have a question? [Get help here](http://wordpress.org/support/plugin/wp-cerber)!
 
 Do you have a suggestion? [Help me improve WP Cerber!](http://wpcerber.com/new-feature-request/)
 
-There are semi-similar security plugins: Login LockDown, Login Security Solution,
+There are semi-similar security plugins you can check out: Login LockDown, Login Security Solution,
 BruteProtect, Ajax Login & Register, Lockdown WP Admin,
 BulletProof Security, SiteGuard WP Plugin, All In One WP Security & Firewall, Brute Force Login Protection
 
@@ -81,7 +87,7 @@ BulletProof Security, SiteGuard WP Plugin, All In One WP Security & Firewall, Br
 
 * [Plugin Inspector reveals issues with installed plugins](https://wordpress.org/plugins/plugin-inspector/)
 
-Checks plugins for deprecated WordPress functions, known security vulnerabilities and some unsafe PHP function
+Checks plugins for deprecated WordPress functions, known security vulnerabilities and some unsafe PHP functions
 
 * [Translate sites with Google Translate Widget](https://wordpress.org/plugins/goo-translate-widget/)
 
@@ -91,13 +97,18 @@ Make your website instantly available in 90+ languages with Google Translate Wid
 
 1. Upload the WP Cerber folder to the plugins directory in your WordPress installation.
 2. Activate the plugin through the WordPress admin interface.
-3. Plugin is now active and has started protecting you site right out of the box.
-4. If you want to customize the set of security settings, you can fine tune it on the settings page.
-5. If you set up a Custom login URL and you are using a caching plugin like **W3 Total Cache** or **WP Super Cache** you should add the slug of the new login URL to the list of pages not to cache.
+3. Plugin is now active and has started protecting you site. Right out of the box.
+4. Make sure, that you received a notification letter on the site admin email.
+5. It's recommended to fine tune security settings and configure Custom login URL.
+6. [Read this if your website is under CloudFlare](http://wpcerber.com/cloudflare-and-wordpress-cerber/)
+7. If you set up a Custom login URL and you use some caching plugin like **W3 Total Cache** or **WP Super Cache** you have to add a new login URL to the list of pages not to cache.
+8. If you want to test out plugin's features do that from another computer and remove computer's network from the White Access List. Cerber is smart enough to recognize the boss.
 
 == Frequently Asked Questions ==
 
-= Is this plugin compatible with Multisite mode? =
+= Can I use the plugin with CloudFlare? =
+
+Yes.  [WP Cerber settings for CloudFlare](http://wpcerber.com/cloudflare-and-wordpress-cerber/).
 
 Yes. All settings apply to all sites in the network simultaneously. You have to activate the plugin in the Network Admin area on the Plugins page. Just click on the Network Activate link.
 
@@ -113,9 +124,9 @@ Yes. [Compatibility notes](http://wpcerber.com/compatibility/).
 
 Yes, easily. Know more: [How to rename wp-login.php](http://wpcerber.com/how-to-rename-wp-login-php/)
 
-= Can this plugin works together with Limit Login Attempts? =
+= Can this plugin works together with the Limit Login Attempts plugin? =
 
-No. WP Cerber is a drop in replacement for it.
+No. WP Cerber is a drop in replacement for that outdated plugin.
 
 = Can WP Cerber protect my site from DDoS attacks? =
 
@@ -149,21 +160,17 @@ Yes! WP Cerber is not on the list of disallowed plugins. There are no limitation
 
 No. It's not possible and not recommended for compatibility reason.
 
-= Can this plugin works together with Limit Login Attempts? =
-
-No. WP Cerber is a drop in replacement for it.
-
 = I can't login / I'm locked out of my site =
 
 **How to get access (log in) to the dashboard?**
 
-There is special version of plugin called **WP Cerber Reset**. This version perform only one task. It will reset all WP Cerber settings to initial values (excluding Access Lists) and then will deactivate itself.
+There is special version of plugin called **WP Cerber Reset**. This version performs only one task. It will reset all WP Cerber settings to initial values (excluding Access Lists) and then will deactivate itself.
 
 To get access to you dashboard you need to copy WP Cerber Reset folder to the plugins folder. Follow those simple steps.
 
 1. Download wp-cerber-reset.zip archive to your computer using this link: [http://wpcerber.com/downloads/wp-cerber-reset.zip](http://wpcerber.com/downloads/wp-cerber-reset.zip)
 2. Unpack wp-cerber folder from archive.
-3. Upload wp-cerber folder to the plugins folder of your site using FTP. If you'll see a question about overwriting file, click Yes.
+3. Upload wp-cerber folder to the plugins folder of your site using FTP or file manager from the hosting control panel. If you see a question about overwriting files, click Yes.
 4. Log in to the your site as usually. Now WP Cerber disabled completely.
 5. Reinstall WP Cerber again. You need to do it, because WP Cerber Reset can't acting as normal plugin.
 
@@ -178,6 +185,41 @@ To get access to you dashboard you need to copy WP Cerber Reset folder to the pl
 7. Beautiful widget for the dashboard to keep an eye on things. Get quick analytic with trends over 24 hours.
 
 == Changelog ==
+
+= 4.0 =
+* New: reCAPTCHA for WooCommerce forms. [How to set up reCAPTCHA](http://wpcerber.com/how-to-setup-recaptcha/).
+* New: IP Access Lists has got support for IP networks in three forms: ability to restrict access with IPv4 ranges, IPv4 CIDR notation and IPv4 subnets: A,B,C has been added. [Access Lists for WordPress](http://wpcerber.com/using-ip-access-lists-to-protect-wordpress/).
+* New: Cerber can automatically detect an IP network of an intruder and suggest you to block entire network right from the Activity screen.
+* New: Norwegian (Bokmål) translation added, thanks to [Eirik Vorland](https://www.facebook.com/KjellDaSensei)translation added.
+* Update: WP REST API is controlled by Access Lists. While REST API is blocked for the rest of the world, IP addresses from the White Access List can use WP REST API.
+* Update: The WP Cerber admin menu is moved from Settings to the main admin menu.
+* Update: To make Cerber more compatible with other plugins, the order of the init hook on the Custom login page (Custom login URL) has been changed.
+* Update: Several languages and translations has been updated.
+* Update: Large amount of code has been rewritten to improve performance and stability.
+* Fixed bug: If a hacker or a bot uses login from the list of prohibited usernames or non-existent username, Citadel mode is unable to be automatically activated.
+* Fixed bug: reCAPTCHA for an ordinary WordPress login form is incompatible with a WooCommerce login form.
+* Fixed issue: In some cases the plugin log first digits of an IP address as an ID of existing user.
+
+= 3.0 =
+* New: [reCAPTCHA to protect WordPress forms spam registrations. Also available for lost password and login forms.](http://wpcerber.com/how-to-setup-recaptcha/)
+* New: Registration, XML RCP, WP REST API are controlled by IP Access Lists now. If a particular IP address is locked out or blacklisted registration is impossible.
+* New: Action Get WHOIS info and trigger IP locked out to create automation scenarios with the [jetFlow.io automation plugin](http://jetflow.io).
+* New: Notification emails will contain Reason of a lockout.
+* New: The activity DB table will be optimized after removing old records daily.
+* Update: Column Username on the Activity tab now shows real value that submitted with WordPress login form.
+* Update: Text domain is updated to 'wp-cerber'
+* Fixed issue: If a user enter correct email address and wrong password to log in, IP address is locked immediately.
+
+= 2.9 =
+* New: Checking for a prohibited username (login). You can specify list of logins manually on the new settings page (Users).
+* New: Rate limiting for notification letters. Set it on the main settings page.
+* New: If new user registration disabled, automatic redirection from wp-register.php to the login page is blocked (404 error). Remote IP will be locked out.
+* New: You can set user session expiration timeout.
+* New: Define constant CERBER_IP_KEY if you want the plugin to use it as a key to get IP address from $_SERVER variable.
+* Update: Improved WP-CLI compatibility.
+* Update: All dates are displayed in a localized format with date_i18n function.
+* Fixed bugs: incorrect admin URL in notification letters for multisite with multiple domains configuration, lack of error message on the login form if IP is blocked, CSRF vulnerability on the import settings page
+* Removed calls of deprecated function get_currentuserinfo().
 
 = 2.7.2 =
 * Fixed bug for non-English WordPress configuration: the plugin is unable to block IP in some server environment. If you have configured language other than English you have to install this release.
