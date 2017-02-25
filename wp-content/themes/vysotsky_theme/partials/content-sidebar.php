@@ -1,4 +1,11 @@
 <div class="topic emerge" data-effect="slide">
+	<div id="sidebar">
+	<?php 
+	   if ( is_active_sidebar( 'header-widget-area' ) ){
+	            dynamic_sidebar( 'header-widget-area' ); 
+	      };
+	?>
+	</div>
     <div class="container">
       <div class="row">
         <div class="col-sm-9" style="padding-left:15px;">

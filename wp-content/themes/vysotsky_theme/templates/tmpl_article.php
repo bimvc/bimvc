@@ -20,7 +20,9 @@ Template Name: Article
 	    margin: 0 auto !important;
 	}
 	.article__content img{
-		box-shadow: 0 0 10px 0 rgba(0,0,0,0.5)
+		box-shadow: 0 0 10px 0 rgba(0,0,0,0.5);
+		display: block;
+		margin: 0 auto;
 	}
 	.article__content p{
 	    margin: 0 0 2rem;
@@ -28,9 +30,10 @@ Template Name: Article
 	    font-size: 14px;
 	    font-weight: 400;
 	}
-	.article__content img{
-		min-width: 100% !important;
-	}
+	iframe{
+		text-align: center;
+		margin: 0 auto;
+		display: block;
 	}
 </style>
 <main>
@@ -80,3 +83,4 @@ Template Name: Article
 		</div>
 	</article>
 </main>
+<?php get_footer(); ?>

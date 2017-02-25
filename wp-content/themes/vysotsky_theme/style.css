@@ -9944,7 +9944,7 @@ font-weight: bold;
 	line-height: 1.5;
 }
 .bm ul {
-	font-size: 20px;
+	font-size: 16px;
 }
 .bm ul li{
 	line-height: 24px;
@@ -9966,7 +9966,7 @@ font-size: 14px !important;
         padding: 10px 20px;
     font-size: 18px;
     display: inline-block;
-    margin-top: 20px;
+    margin-bottom: 10px;
     letter-spacing: 2px;
 }
 .bm_container{
@@ -10023,18 +10023,17 @@ font-size: 14px !important;
 }
 .bm_unheader{
     background-color: #ff6a6a;
-    min-height: 490px;
     padding: 50px 0;
     color: white;
     box-shadow: inset 0 10px 10px -5px rgba(0,0,0,0.1);
 }
 .bm_unheader p{
-	line-height: 28px;
 	margin-top: 28px;
 	color: white;
 }
 .bm_quote{
-min-height: 200px;}
+	min-height: 200px;
+}
 
 .bm_quote span{
 	display: block;
@@ -10049,7 +10048,6 @@ min-height: 200px;}
 }
 .bm_quote p{
 	font-size: 16px;
-	line-height: 1.2;
 	margin-top: 0;
 }
 .bm_quote small{
@@ -10086,7 +10084,7 @@ min-height: 200px;}
 	margin-top: 40px;
 }
 .bm_text_rasp{
-
+	margin-top: 8px;
 }
 .bm_teacher{
     width: auto;
