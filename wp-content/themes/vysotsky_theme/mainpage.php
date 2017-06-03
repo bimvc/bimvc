@@ -29,7 +29,7 @@
               <li><img src="<?php echo get_template_directory_uri().'/img/main/centromash.jpg'; ?>"></li>
               <li><img src="<?php echo get_template_directory_uri().'/img/main/etalon.jpg'; ?>"></li>
               <li style="margin-top:2px;"><img src="<?php echo get_template_directory_uri().'/img/main/au.jpg'; ?>"></li>
-              <li><img src="<?php echo get_template_directory_uri().'/img/main/tebodin.jpg'; ?>"></li>
+              <li><img src="<?php echo get_template_directory_uri().'/img/logos/tebodin.png'; ?>" style="opacity: 0.5;"></li>
               <li><img src="<?php echo get_template_directory_uri().'/img/main/sveko.jpg'; ?>"></li>
               <li><img src="<?php echo get_template_directory_uri().'/img/main/spbgos.jpg'; ?>"></li>
               <li><img src="<?php echo get_template_directory_uri().'/img/main/tumen.jpg'; ?>"></li>

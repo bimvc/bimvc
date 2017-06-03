@@ -5,7 +5,7 @@
 	Description: Protects site from brute force attacks, bots and hackers. Antispam protection with reCAPTCHA. Comprehensive control of user activity. Restrict login by IP access lists. Limit login attempts. Feel free to contact developer on the site <a href="http://wpcerber.com">wpcerber.com</a>.
 	Author: Gregory
 	Author URI: http://wpcerber.com
-	Version: 4.0
+	Version: 4.1
 	Text Domain: wp-cerber
 	Domain Path: /languages
 	Network: true
@@ -56,7 +56,7 @@
 
 */
 
-define( 'CERBER_VER', '4.0' );
+define( 'CERBER_VER', '4.1' );
 define( 'CERBER_LOG_TABLE', 'cerber_log' );
 define( 'CERBER_ACL_TABLE', 'cerber_acl' );
 define( 'CERBER_BLOCKS_TABLE', 'cerber_blocks' );
@@ -277,8 +277,8 @@ class WP_Cerber {
 		} );
 		add_filter( 'woocommerce_process_login_errors', function ( $validation_error ) {
 			global $wp_cerber;
-			$wp_cerber->reCaptchaNow();
-			if ( ! $wp_cerber->reCaptchaValidate('woologin') ) {
+			//$wp_cerber->reCaptchaNow();
+			if ( ! $wp_cerber->reCaptchaValidate('woologin', true) ) {
 				cerber_log( 40 );
 
 				return new WP_Error( 'incorrect_recaptcha', $wp_cerber->reCaptchaMsg('woocommerce-login'));
@@ -288,8 +288,8 @@ class WP_Cerber {
 		add_filter( 'allow_password_reset', function ( $var ) { // Note: 'allow_password_reset' also is fired in WP itself
 			global $wp_cerber;
 			if ( isset( $_POST['wc_reset_password'] ) && did_action( 'woocommerce_init' )) {
-				$wp_cerber->reCaptchaNow();
-				if ( ! $wp_cerber->reCaptchaValidate( 'woolost' ) ) {
+				//$wp_cerber->reCaptchaNow();
+				if ( ! $wp_cerber->reCaptchaValidate( 'woolost' , true) ) {
 					cerber_log( 40 );
 
 					return new WP_Error( 'incorrect_recaptcha', $wp_cerber->reCaptchaMsg('woocommerce-lost'));
@@ -299,8 +299,8 @@ class WP_Cerber {
 		});
 		add_filter( 'woocommerce_process_registration_errors', function ( $validation_error ) {
 			global $wp_cerber;
-			$wp_cerber->reCaptchaNow();
-			if ( ! $wp_cerber->reCaptchaValidate('wooreg') ) {
+			//$wp_cerber->reCaptchaNow();
+			if ( ! $wp_cerber->reCaptchaValidate('wooreg' , true) ) {
 				cerber_log( 40 );
 
 				return new WP_Error( 'incorrect_recaptcha', $wp_cerber->reCaptchaMsg('woocommerce-register'));
@@ -379,12 +379,15 @@ class WP_Cerber {
 	 * Validate reCAPTCHA by calling Google service
 	 *
 	 * @param string $form  Form ID (slug)
+	 * @param boolean $force Force validate without prechecks
 	 *
 	 * @return bool true on success false on failure
 	 */
-	final public function reCaptchaValidate($form = null) {
-		if ( ! $this->recaptcha || $this->status == 4 ) {
-			return true;
+	final public function reCaptchaValidate($form = null, $force = false) {
+		if (!$force) {
+			if ( ! $this->recaptcha || $this->status == 4 ) {
+				return true;
+			}
 		}
 
 		if ( ! $form ) {
@@ -621,17 +624,19 @@ add_filter( 'registration_errors', 'cerber_reg_errors', 10, 3 );
 function cerber_reg_errors( $errors, $sanitized_user_login, $user_email ) {
 	global $wp_cerber;
 	if ( ! $wp_cerber->reCaptchaValidate() ) {
-		$errors = new WP_Error();
 		cerber_log( 40 );
-		$errors->add( 'incorrect_recaptcha',
+		$error = new WP_Error();
+		$error->add( 'incorrect_recaptcha',
 			'<strong>' . __( 'ERROR:', 'wp-cerber' ) . ' </strong>' .
 			$wp_cerber->reCaptchaMsg('register'));
+		return $error;
 	}
 	if ( $wp_cerber->isProhibited( $sanitized_user_login ) ) {
-		$errors = new WP_Error();
-		$errors->add( 'incorrect_login',
+		$error = new WP_Error();
+		$error->add( 'incorrect_login',
 			'<strong>' . __( 'ERROR:', 'wp-cerber' ) . ' </strong>' .
 			apply_filters( 'cerber_msg_prohibited', __( 'Username is not allowed. Please choose another one.', 'wp-cerber' ), 'register' ) );
+		return $error;
 	}
 
 	return $errors;
@@ -2095,13 +2100,19 @@ function cerber_plugin_file() {
 	Format date
 */
 function cerber_date( $timestamp ) {
+	global $wp_cerber;
 	$timestamp  = absint( $timestamp );
 	$gmt_offset = get_option( 'gmt_offset' ) * 3600;
-	$tf         = get_option( 'time_format' );
-	$df         = get_option( 'date_format' );
-	//return date($df.', '.$tf, $gmt_offset + $timestamp);
-	//return date_i18n($df.', '.$tf, $gmt_offset + $timestamp).', '.date_i18n($tf, $gmt_offset + $timestamp);
-	return date_i18n( $df, $gmt_offset + $timestamp ) . ', ' . date_i18n( $tf, $gmt_offset + $timestamp );
+	if ($df = $wp_cerber->getSettings('dateformat')){
+		return date_i18n( $df, $gmt_offset + $timestamp );
+	}
+	else {
+		$tf = get_option( 'time_format' );
+		$df = get_option( 'date_format' );
+		//return date($df.', '.$tf, $gmt_offset + $timestamp);
+		//return date_i18n($df.', '.$tf, $gmt_offset + $timestamp).', '.date_i18n($tf, $gmt_offset + $timestamp);
+		return date_i18n( $df, $gmt_offset + $timestamp ) . ', ' . date_i18n( $tf, $gmt_offset + $timestamp );
+	}
 }
 
 /**

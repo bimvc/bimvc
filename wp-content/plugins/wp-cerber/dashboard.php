@@ -188,6 +188,7 @@ function cerber_admin_ajax() {
 			else $deleted = $ip['range'];
 			$response['deleted_ip'] = $deleted;
 		}
+		else $response['error'] = 'Unable to delete';
 	}
 	elseif (isset($_REQUEST['get_hostnames'])){
 		$list = array_unique($_REQUEST['get_hostnames']);
@@ -670,7 +671,7 @@ function cerber_show_tools(){
 	$form .= '<p><input type="file" name="ifile" id="ifile" required="required">';
 	$form .= '<p>'.__('What do you want to import?','wp-cerber').'</p><p><input id="importset" name="importset" value="1" type="checkbox" checked> <label for="importset">'.__('Settings','wp-cerber').'</label>';
 	$form .= '<p><input id="importacl" name="importacl" value="1" type="checkbox" checked> <label for="importacl">'.__('Access Lists','wp-cerber').'</label>';
-	$form .= '<p><input type="submit" name="cerber_import" id="submit" class="button button-primary" value="'.__('Upload file').'"></form>';
+	$form .= '<p><input type="submit" name="cerber_import" id="submit" class="button button-primary" value="'.__('Upload file','wp-cerber').'"></form>';
 	echo $form;
 
 	?>
@@ -745,7 +746,7 @@ function cerber_export(){
 */
 add_action('admin_init','cerber_import');
 function cerber_import(){
-	global $wpdb;
+	global $wpdb, $wp_cerber;
 	if (!isset($_POST['cerber_import']) || $_SERVER['REQUEST_METHOD']!='POST') return;
 	check_admin_referer('crb_import','crb_field');
 	if (!current_user_can('manage_options')) wp_die('Upload failed.');
@@ -760,8 +761,12 @@ function cerber_import(){
 		$sys = explode('/',substr($file,$p));
 		if ($sys[3] == 'EOF' && crc32($data) == $sys[2] && ($data = json_decode($data, true))) {
 
-			if ($_POST['importset'] && $data['options'] && is_array($data['options']) && !empty($data['options'])) {
+			if ($_POST['importset'] && $data['options'] && !empty($data['options']) && is_array($data['options'])) {
 				$data['options']['loginpath'] = urldecode($data['options']['loginpath']); // needed to work filter cerber_sanitize_options()
+				if ($data['home'] != get_home_url()) {
+					$data['options']['sitekey'] = $wp_cerber->getSettings('sitekey');
+					$data['options']['secretkey'] = $wp_cerber->getSettings('secretkey');
+				}
 				cerber_save_options($data['options']); // @since 2.0
 			}
 

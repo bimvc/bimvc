@@ -26,7 +26,7 @@
 					?>
 	        	</div>
 	        	<div style="float: right;">
-					<a href="/auth.php?action=logout&redirect_to=http://bim.vc/" class="btn btn-default btn-xs" title="Выход" style="margin-left: 6px; margin-top: 7px;">
+					<a href="/auth.php?action=logout&redirect_to=http%3A%2F%2Fbim.vc%2Fcourse&lang=ru" class="btn btn-default btn-xs" title="Выход" style="margin-left: 6px; margin-top: 7px;">
 						<span class="glyphicon glyphicon-log-out"></span>
 						&ensp;Выход
 					</a>
@@ -42,5 +42,6 @@
 			</h6>
         </div>
       </div>
+    </div>
     </div>
 </div>

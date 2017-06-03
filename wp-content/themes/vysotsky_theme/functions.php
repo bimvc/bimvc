@@ -1,27 +1,5 @@
 <?php
 
-// new subscriber to mailchimp
-
-add_action('newSubscriber', 'newSubscriberFunc');
-
-function newSubscriberFunc($subscriber) {
-	$data = json_encode( array(
-			"email_address" => $subscriber,
-			"status" => "subscribed",
-		));
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, "https://us14.api.mailchimp.com/3.0/lists/07583bb04d/members");
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HEADER, 'content-type: application/json');
-	curl_setopt($ch, CURLOPT_USERPWD, 'mchbimvc:32eb5386486c3b7fb6d1de125e04100e-us14');
-	curl_setopt($ch, CURLOPT_POST, true);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $data); 
-	
-	print_r( curl_exec($ch) );
-	curl_close($ch);
-	wp_die();
-}
-
 /* Отключаем админ панель для всех пользователей */
 show_admin_bar(false);
 
@@ -55,10 +33,10 @@ $args = array(
 	'walker'          => '',              // (object) Класс собирающий меню. Default: new Walker_Nav_Menu
 	'theme_location'  => ''               // (string) Расположение меню в шаблоне. (указывается ключ которым было зарегистрировано меню в функции register_nav_menus)
 );
-function keep_me_logged_in_for_1_year( $expirein ) {
- return 31556926; // 1 год в секундах
-}
-add_filter( 'auth_cookie_expiration', 'keep_me_logged_in_for_1_year' );
+// function keep_me_logged_in_for_1_year( $expirein ) {
+//  return 31556926; // 1 год в секундах
+// }
+// add_filter( 'auth_cookie_expiration', 'keep_me_logged_in_for_1_year' );
 
 function login_by_email( $user, $username, $password ) {
 	// если введен логин, то отправляем лесом
@@ -460,12 +438,19 @@ array( 'description' => __( 'Объявление в шапке', 'wpb_widget_do
 // This is where the action happens
 public function widget( $args, $instance ) {
 
-$before = '<div class="topAds__container"><div class="container"><div class="topAds">';
+$color = $instance['color'];
+$before = '<div class="topAds__container" style="background-color: '.$color.';"><div class="container"><div class="topAds">';
 $after = '</div>';
 
 $link = $instance['link'];
 $title = apply_filters( 'widget_title', $instance['title'] );
-$btn = '<a href="'.$link.'"><button>Подробнее</button></a></div><span onclick="$(\'.topAds__container\').hide(); $(\'.topic\').css(\'margin-top\',\'65px\');">×</span></div>';
+$btn = '<a href="'.$link.'"><button>Подробнее</button></a></div><span class="closeBanner">×</span></div>
+<script>
+$(".closeBanner").click(function(){
+	$(this).parent(".topAds__container").hide();
+	$(".topic").css("margin-top","65px");
+});
+</script>';
 
 
 
@@ -477,13 +462,15 @@ echo '';
 }		
 // Widget Backend 
 public function form( $instance ) {
-if ( isset( $instance[ 'title' ])  || isset( $instance[ 'link' ]) ) {
+if ( isset( $instance[ 'title' ])  || isset( $instance[ 'link' ]) || isset( $instance[ 'color' ]) ) {
 	$title = $instance[ 'title' ];
 	$link = $instance[ 'link' ];
+	$color = $instance[ 'color' ];
 }
 else {
 	$title = __( 'New title', 'wpb_widget_domain' );
 	$link = __( 'New link', 'wpb_widget_domain' );
+	$color = __( 'New color', 'wpb_widget_domain' );
 }
 // Widget admin form
 ?>
@@ -491,8 +478,13 @@ else {
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Текст объявления:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
+		<p>
 		<label for="<?php echo $this->get_field_id( 'link' ); ?>"><?php _e( 'Ссылка на "Подробнее":' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'link' ); ?>" name="<?php echo $this->get_field_name( 'link' ); ?>" type="text" value="<?php echo $link; ?>" />
+		</p>
+		<p>
+		<label for="<?php echo $this->get_field_id( 'link' ); ?>"><?php _e( 'Цвет блока:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'color' ); ?>" name="<?php echo $this->get_field_name( 'color' ); ?>" type="text" value="<?php echo $color; ?>" />
 		</p>
 <?php 
 }
@@ -501,6 +493,7 @@ else {
 		$instance = array();
 		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
 		$instance['link'] = ( ! empty( $new_instance['link'] ) ) ? $new_instance['link'] : '';
+		$instance['color'] = ( ! empty( $new_instance['color'] ) ) ? $new_instance['color'] : '';
 		return $instance;
 	}
 } // Class wpb_widget ends here

@@ -10632,3 +10632,6 @@ div.wp-caption{
 .wp-capition img{
 	box-shadow: 0 0 20px 0 rgba(0,0,0,0.5) !important;
 }
+iframe header{
+	display: none !important;
+}

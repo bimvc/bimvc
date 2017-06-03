@@ -15,4 +15,5 @@ Template Name: Курс
         </div>
     </div>
 </div>
+<script src="/wp-content/themes/vysotsky_theme/js/my/hashLinkClick.js"></script>
 <?php get_footer(); ?>

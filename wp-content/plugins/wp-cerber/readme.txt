@@ -1,10 +1,10 @@
 === Cerber Security & Limit Login Attempts ===
 Contributors: gioni
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SR8RJXFU35EW8
-Tags: security, admin, login, protect, protection, woocommerce, antispam, brute force, bruteforce, users, captcha, recaptcha, activity, log, logging, block, fail2ban, monitoring, rename wp login, whitelist, blacklist, wordpress security, xmlrpc, user enumeration, hardening, authentication, block
+Tags: security, admin, login, protect, protection, woocommerce, antispam, brute force, bruteforce, users, captcha, recaptcha, activity, log, logging, block, fail2ban, monitoring, rename wp login, whitelist, blacklist, wordpress security, xmlrpc, user enumeration, hardening, authentication
 Requires at least: 4.4
-Tested up to: 4.7.1
-Stable tag: 4.0
+Tested up to: 4.7.2
+Stable tag: 4.1
 License: GPLv2
 
 Protection against brute force attacks and bots. Restrict login by IP access lists. Monitor user and bot activity. Limit login attempts. reCAPTCHA.
@@ -67,7 +67,7 @@ Massive botnet brute force attack? That's no longer a problem. **Citadel mode** 
 * Français, thanks to [hardesfred](https://profiles.wordpress.org/hardesfred/)
 * Norwegian (Bokmål), thanks to [Eirik Vorland](https://www.facebook.com/KjellDaSensei)
 * Portuguese, thanks to Felipe Turcheti
-* Spanish, thanks to Ismael and leemon
+* Spanish, thanks to Ismael and [leemon](https://profiles.wordpress.org/leemon/)
 * Український, thanks to [Nadia](https://profiles.wordpress.org/webbistro)
 * Русский, thanks to [Yui](https://profiles.wordpress.org/fierevere/)
 
@@ -186,11 +186,18 @@ To get access to you dashboard you need to copy WP Cerber Reset folder to the pl
 
 == Changelog ==
 
+= 4.1 =
+* New: Date format field allows you to specify a desirable format for displaying dates and time.
+* Updated code for registration_errors filter to handle errors right way.
+* The French translation has been updated.
+* Fixed issue: Loading settings from a file with reCAPTCHA key and secret on a different website overwrite existing reCAPTCHA key and secret with values from the file.
+* Fixed bug: The plugin tries to validate reCAPTCHA on WooCommerce login form if the validation enabled for the default WordPress login form only.
+
 = 4.0 =
 * New: reCAPTCHA for WooCommerce forms. [How to set up reCAPTCHA](http://wpcerber.com/how-to-setup-recaptcha/).
 * New: IP Access Lists has got support for IP networks in three forms: ability to restrict access with IPv4 ranges, IPv4 CIDR notation and IPv4 subnets: A,B,C has been added. [Access Lists for WordPress](http://wpcerber.com/using-ip-access-lists-to-protect-wordpress/).
 * New: Cerber can automatically detect an IP network of an intruder and suggest you to block entire network right from the Activity screen.
-* New: Norwegian (Bokmål) translation added, thanks to [Eirik Vorland](https://www.facebook.com/KjellDaSensei)translation added.
+* New: Norwegian translation added, thanks to [Eirik Vorland](https://www.facebook.com/KjellDaSensei).
 * Update: WP REST API is controlled by Access Lists. While REST API is blocked for the rest of the world, IP addresses from the White Access List can use WP REST API.
 * Update: The WP Cerber admin menu is moved from Settings to the main admin menu.
 * Update: To make Cerber more compatible with other plugins, the order of the init hook on the Custom login page (Custom login URL) has been changed.

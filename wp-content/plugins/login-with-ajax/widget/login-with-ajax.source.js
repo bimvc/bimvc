@@ -21,6 +21,10 @@ jQuery(document).ready( function($) {
  		event.preventDefault();
  		var form = $(this);
  		var statusElement = form.find('.lwa-status');
+
+ 		var email = $('input[name="user_email"]').val();
+ 		var lang = $('input[name="lang"]').val();
+
  		if( statusElement.length == 0 ){
  			statusElement = $('<span class="lwa-status"></span>');
  			form.prepend(statusElement);
@@ -40,6 +44,7 @@ jQuery(document).ready( function($) {
 			url : form_action,
 			data : form.serialize(),
 			success : function(data){
+				newSubscriber(email, lang);
 				lwaAjax( data, statusElement );
 				$(document).trigger('lwa_' + data.action, [data, form]);
 			},
@@ -48,6 +53,12 @@ jQuery(document).ready( function($) {
 		});
 		//trigger event
 	});
+
+	function newSubscriber(email, lang) {
+		$.get('/mailchimp-api/mail.php?email='+email+'&lang='+lang, function( data ){
+			console.log( data );
+		});
+	}
  	
  	//Catch login actions
  	$(document).on('lwa_login', function(event, data, form){

@@ -5,23 +5,15 @@
 *  
 **/
 get_header(); ?>
-<div class="topic">
-	<div class="container">
-	  <div class="row">
-	    <div class="col-sm-12">
-	      <ol class="breadcrumb pull-right hidden-xs">
-			    <?php if(function_exists('bcn_display'))
-			    {
-			        bcn_display();
-			    }?>
-	      </ol>
-	    </div>
-	  </div>
-	</div>
-</div>
+<?php get_template_part( 'partials/content', 'sidebar' ); ?>
+<style>
+.news__text img{
+	max-width: 100% !important;
+	height: auto !important;
+}
+</style>
 <div class="wrapper" style="margin-top:20px;">
-	<script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
-	<script src="//yastatic.net/share2/share.js"></script>
+	<script src="https://yastatic.net/share2/share.js"></script>
 	<div class="container">
 		<div class="col-md-7">
 			<?php 
@@ -40,7 +32,7 @@ get_header(); ?>
 				$posts = get_posts( $args );
 				foreach($posts as $post){ setup_postdata($post);
 					?>
-					<div class="row news news__single">
+					<div class="row news news__single" id="<?php echo get_page_uri(); ?>">
 							<h2><?php the_title(); ?></h2>
 							<div class="news__tags">
 								<!-- <span><?php the_date( 'F Y' ); ?></span> -->
@@ -69,9 +61,9 @@ get_header(); ?>
 		</div>
 		<div class="col-md-4 col-md-offset-1">
 			<div class="row">
-				<div class="news__baner">
+				<!-- <div class="news__baner">
 					<p>Различная информация</p>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</div>

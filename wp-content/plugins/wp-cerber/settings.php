@@ -35,13 +35,11 @@
 // If this file is called directly, abort executing.
 if ( ! defined( 'WPINC' ) ) { exit; }
 
-
-define('CERBER_OPT','cerber-main'); // tab 1
-define('CERBER_OPT_H','cerber-hardening'); // tab 2
-define('CERBER_OPT_U','cerber-users'); // tab 3
-define('CERBER_OPT_C','cerber-recaptcha'); // tab 4
+define('CERBER_OPT','cerber-main');
+define('CERBER_OPT_H','cerber-hardening');
+define('CERBER_OPT_U','cerber-users');
+define('CERBER_OPT_C','cerber-recaptcha');
 //define('CERBER_OPTIONS','cerberus');
-
 
 /*
 	WP Settings API
@@ -86,11 +84,15 @@ function cerber_settings_init(){
 	add_settings_field('keeplog',__('Keep records for','wp-cerber'),'cerberus_field_show','cerber-'.$tab,'activity',array('group'=>$tab,'option'=>'keeplog','type'=>'text','label'=>__('days','wp-cerber'),'size'=>3));
 	//$http = _wp_http_get_object();
 	//if ($http->block_request(RIPE_HOST)) {}
-	add_settings_field('ip_extra',__('Drill down IP','wp-cerber'),'cerberus_field_show','cerber-'.$tab,'activity',array('group'=>$tab,'option'=>'ip_extra','type'=>'checkbox','label'=>__('Retrieve extra WHOIS information for IP','wp-cerber').' <a href="' . cerber_admin_link('help') . '">Know more</a>'));
+	//add_settings_field('ip_extra',__('Drill down IP','wp-cerber'),'cerberus_field_show','cerber-'.$tab,'activity',array('group'=>$tab,'option'=>'ip_extra','type'=>'checkbox','label'=>__('Retrieve extra WHOIS information for IP','wp-cerber').' <a href="' . cerber_admin_link('help') . '">Know more</a>'));
 	add_settings_field('cerberlab',__('Cerber Lab connection','wp-cerber'),'cerberus_field_show','cerber-'.$tab,'activity',array('group'=>$tab,'option'=>'cerberlab','type'=>'checkbox','label'=>__('Send malicious IP addresses to the Cerber Lab','wp-cerber').' <a target="_blank" href="http://wpcerber.com/cerber-laboratory/">Know more</a>'));
 	add_settings_field('cerberproto',__('Cerber Lab protocol','wp-cerber'),'cerberus_field_show','cerber-'.$tab,'activity',array('group'=>$tab,'option'=>'cerberproto','type'=>'select','set'=> array('HTTP', 'HTTPS')));
 	add_settings_field('usefile',__('Use file','wp-cerber'),'cerberus_field_show','cerber-'.$tab,'activity',array('group'=>$tab,'option'=>'usefile','type'=>'checkbox','label'=>__('Write failed login attempts to the file','wp-cerber')));
 
+	add_settings_section('prefs', __('Preferences','wp-cerber'), 'cerberus_section_preferences', 'cerber-'.$tab);
+	add_settings_field('ip_extra',__('Drill down IP','wp-cerber'),'cerberus_field_show','cerber-'.$tab,'prefs',array('group'=>$tab,'option'=>'ip_extra','type'=>'checkbox','label'=>__('Retrieve extra WHOIS information for IP','wp-cerber').' <a href="' . cerber_admin_link('help') . '">Know more</a>'));
+	add_settings_field( 'dateformat', __( 'Date format', 'wp-cerber' ), 'cerberus_field_show', 'cerber-' . $tab, 'prefs', array( 'group'  => $tab, 'option' => 'dateformat', 'type'   => 'text', 'label'  => '<a target="_blank" href="http://wpcerber.com/date-format-setting/">Know more</a>'
+	) );
 
 	// Hardening tab
 
@@ -148,6 +150,8 @@ function cerberus_section_citadel($args){
 	_e("In Citadel mode nobody is able to login. Active user's sessions will not be affected.",'wp-cerber');
 }
 function cerberus_section_activity($args){
+}
+function cerberus_section_preferences(){
 }
 function cerberus_section_hardening($args){
 	echo __("These settings do not affect hosts from the ",'wp-cerber').' '.__('White IP Access List','wp-cerber');
@@ -376,11 +380,15 @@ function cerber_sanitize_options($new, $old, $option) { // $option added in WP 4
 	return $new;
 }
 /*
-	Sanitizing users input for User related settings
+	Sanitizing/checking  user input for User tab settings
 */
 add_filter( 'pre_update_option_'.CERBER_OPT_U, 'cerber_sanitize_u', 10, 3 );
 function cerber_sanitize_u($new, $old, $option) { // $option added in WP 4.4.0
-	$list = explode(',',$new['prohibited']);
+	if ( ! is_array( $new['prohibited'] ) ) {
+		$list = explode( ',', $new['prohibited'] );
+	} else {
+		$list = $new['prohibited'];
+	}
 	$list = array_map('trim', $list);
 	$list = array_filter($list);
 	$list = array_unique($list);
@@ -388,12 +396,12 @@ function cerber_sanitize_u($new, $old, $option) { // $option added in WP 4.4.0
 	return $new;
 }
 /*
-	Sanitizing users input for reCAPTCHA related settings
+	Sanitizing/checking user input for reCAPTCHA tab settings
 */
 add_filter( 'pre_update_option_'.CERBER_OPT_C, 'cerber_sanitize_c', 10, 3 );
 function cerber_sanitize_c($new, $old, $option) {
 	global $wp_cerber;
-	// Check abilty to make external HTTP requests
+	// Check ability to make external HTTP requests
 	if (!empty($new['sitekey']) && !empty($new['secretkey'])) {
 		if (!$goo = $wp_cerber->reCaptchaRequest()) {
 			$labels = cerber_get_labels( 'activity' );
@@ -403,10 +411,30 @@ function cerber_sanitize_c($new, $old, $option) {
 	}
 	return $new;
 }
+/**
+ * Let's sanitize them all
+ * @since 4.1
+ *
+ */
+add_filter( 'pre_update_option','cerber_o_sanitizer', 10 , 3);
+function cerber_o_sanitizer($value, $option, $old_value) {
+	if (in_array($option, array(CERBER_OPT, CERBER_OPT_H, CERBER_OPT_U, CERBER_OPT_C))){
+		if (is_array($value)){
+			array_walk_recursive($value, function (&$element, $key) {
+				if (!is_array($element)) $element = sanitize_text_field($element);
+			});
+		}
+		else {
+			$value = sanitize_text_field($value);
+		}
+	}
+	return $value;
+}
+
 /*
  *
  * Process POST Form for settings screens in multisite mode.
- * Because of Settigns API doesn't work in multisite mode!
+ * Because of Settings API doesn't work in multisite mode!
  *
  */
 if (is_multisite())  add_action('admin_init', 'cerber_ms_update'); // allowed only for network
@@ -420,6 +448,9 @@ function cerber_ms_update() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
+
+	// See wp_nonce_field() in the settings_fields() function
+	check_admin_referer($_POST['option_page'].'-options');
 
 	$opt_name = 'cerber-' . substr( $_POST['option_page'], 9 ); // 8 = length of 'cerberus-'
 
@@ -469,6 +500,7 @@ function cerber_get_defaults($field = null) {
 			'cerberlab' => 0,
 			'cerberproto' => 0,
 			'usefile' => 0,
+			'dateformat' => ''
 
 		),
 		CERBER_OPT_H => array(
